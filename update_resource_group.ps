@@ -31,3 +31,26 @@ function Update-ResourceGroup {
     Set-AzResourceGroup -Name $ResourceGroupName -Tag $Tags
     Write-Host "Resource group '$ResourceGroupName' updated successfully!" -ForegroundColor Green
 }
+
+# 'Main' function: menu-driven interactive interface for the scripts
+function Main {
+    while ($true) {
+        Write-Host "`nSelect an operation:" -ForegroundColor Cyan
+        Write-Host "1. Create a Resource Group" -ForegroundColor Cyan
+        Write-Host "2. Update a Resource Group" -ForegroundColor Cyan
+        Write-Host "3. Delete a Resource Group" -ForegroundColor Cyan
+        Write-Host "4. Exit" -ForegroundColor Cyan
+
+        $choice = Read-Host "Enter your choice (1-4)"
+        switch ($choice) {
+            1 { Create-ResourceGroup }
+            2 { Update-ResourceGroup }
+            3 { Delete-ResourceGroup }
+            4 { break }
+            default { Write-Host "Invalid choice. Please try again." -ForegroundColor Red }
+        }
+    }
+}
+
+# Run the main menu
+Main
