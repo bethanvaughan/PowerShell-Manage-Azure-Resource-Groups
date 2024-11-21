@@ -1,0 +1,33 @@
+# Function to Update a Resource Group (e.g., Tags)
+
+function Update-ResourceGroup {
+    param (
+        [string]$ResourceGroupName,
+        [hashtable]$Tags
+    )
+
+    if ($ResourceGroupName -eq null) {
+        $ResourceGroupName = Read-Host "Enter the name of the resource group to update"
+    }
+
+    # Confirm the resource group exists
+    $existingRG = Get-AzResourceGroup -Name $ResourceGroupName -ErrorAction SilentlyContinue
+    if (-$existingRG-eq null) {
+        Write-Host "Resource group '$ResourceGroupName' does not exist. I cannot update it." -ForegroundColor Red
+        return
+    }
+
+    # Prompt the user to input new tags 
+    if ($Tags-eq null) {
+        $tagsInput = Read-Host "Enter tags as key=value pairs, separated by commas (for example: 'env=prod,owner=john')"
+        $Tags = @{}
+        $tagsInput -split ',' | ForEach-Object {
+            $keyValue = $_ -split '='
+            $Tags[$keyValue[0]] = $keyValue[1]
+        }
+    }
+
+    Write-Host "Updating tags for resource group '$ResourceGroupName'..." -ForegroundColor Green
+    Set-AzResourceGroup -Name $ResourceGroupName -Tag $Tags
+    Write-Host "Resource group '$ResourceGroupName' updated successfully!" -ForegroundColor Green
+}
