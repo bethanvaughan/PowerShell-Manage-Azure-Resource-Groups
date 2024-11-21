@@ -1,1 +1,28 @@
+# Function to Create a Resource Group
+function Create-ResourceGroup {
+    param (
+        [string]$ResourceGroupName,
+        [string]$Location
+    )
+
+    if ($ResourceGroupName -eq null) {
+        $ResourceGroupName = Read-Host "Enter the name of the new resource group you would like to create"
+    }
+    if ($Location -eq null) {
+        $Location = Read-Host "Enter the Azure location you would like for the new resource group (e.g., uksouth)"
+    }
+
+    Write-Host "Creating your resource group '$ResourceGroupName' in location '$Location'..." -ForegroundColor Green
+
+    # Check if the resource group already exists
+    $existingRG = Get-AzResourceGroup -Name $ResourceGroupName -ErrorAction SilentlyContinue
+    if ($existingRG-ne null) {
+        Write-Host "The resource group '$ResourceGroupName' already exists. No action taken." -ForegroundColor Yellow
+    } else {
+        New-AzResourceGroup -Name $ResourceGroupName -Location $Location
+        Write-Host "Resource group '$ResourceGroupName' has been created successfully!" -ForegroundColor Green
+    }
+}
+
+
 
