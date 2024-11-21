@@ -1,11 +1,12 @@
 # Function to Delete a Resource Group
+
 function Delete-ResourceGroup {
     param (
         [string]$ResourceGroupName
     )
 
-    if (-not $ResourceGroupName) {
-        $ResourceGroupName = Read-Host "Enter the name of the resource group to delete"
+    if ($ResourceGroupName -eq null) {
+        $ResourceGroupName = Read-Host "Please enter the name of the resource group you would like to delete"
     }
 
     # Confirm the resource group exists
@@ -26,7 +27,7 @@ function Delete-ResourceGroup {
     }
 }
 
-# Main menu for interactivity
+# 'Main' function: menu-driven interactive interface for the scripts
 function Main {
     while ($true) {
         Write-Host "`nSelect an operation:" -ForegroundColor Cyan
