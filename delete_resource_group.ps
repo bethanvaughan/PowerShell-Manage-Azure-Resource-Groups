@@ -1,0 +1,50 @@
+# Function to Delete a Resource Group
+function Delete-ResourceGroup {
+    param (
+        [string]$ResourceGroupName
+    )
+
+    if (-not $ResourceGroupName) {
+        $ResourceGroupName = Read-Host "Enter the name of the resource group to delete"
+    }
+
+    # Confirm the resource group exists
+    $existingRG = Get-AzResourceGroup -Name $ResourceGroupName -ErrorAction SilentlyContinue
+    if (-not $existingRG) {
+        Write-Host "Resource group '$ResourceGroupName' does not exist. Cannot delete." -ForegroundColor Red
+        return
+    }
+
+    # Prompt user for confirmation
+    Write-Host "Are you sure you want to delete resource group '$ResourceGroupName'? (y/n)" -ForegroundColor Yellow
+    $confirmation = Read-Host "Enter your choice"
+    if ($confirmation -eq 'y') {
+        Remove-AzResourceGroup -Name $ResourceGroupName -Force
+        Write-Host "Resource group '$ResourceGroupName' deleted successfully!" -ForegroundColor Green
+    } else {
+        Write-Host "Deletion of resource group '$ResourceGroupName' canceled." -ForegroundColor Yellow
+    }
+}
+
+# Main menu for interactivity
+function Main {
+    while ($true) {
+        Write-Host "`nSelect an operation:" -ForegroundColor Cyan
+        Write-Host "1. Create a Resource Group" -ForegroundColor Cyan
+        Write-Host "2. Update a Resource Group" -ForegroundColor Cyan
+        Write-Host "3. Delete a Resource Group" -ForegroundColor Cyan
+        Write-Host "4. Exit" -ForegroundColor Cyan
+
+        $choice = Read-Host "Enter your choice (1-4)"
+        switch ($choice) {
+            1 { Create-ResourceGroup }
+            2 { Update-ResourceGroup }
+            3 { Delete-ResourceGroup }
+            4 { break }
+            default { Write-Host "Invalid choice. Please try again." -ForegroundColor Red }
+        }
+    }
+}
+
+# Run the main menu
+Main
